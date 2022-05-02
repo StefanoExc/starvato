@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block head_title %}Prenota-Starvato Airlines{% endblock head_title%}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/3.0.0/flickity.min.css" integrity="sha512-fJcFDOQo2+/Ke365m0NMCZt5uGYEWSxth3wg2i0dXu7A1jQfz9T4hdzz6nkzwmJdOdkcS8jmy2lWGaRXl+nFMQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+        const BASE_URL = "http://127.0.0.1:8000/"
+        const URL_PERSONALE = BASE_URL + "dipendenti/" 
+        const URL_AEROPORTI = BASE_URL + "aeroporti/"
+        const URL_AEROMOBILI = BASE_URL + "aeromobili/"
+        const URL_VOLI = BASE_URL + "voli/"
+        const POSTI_DA_PRENOTARE = getUrlData().get('viaggiatori')
+
+        const Aeroporti = async () => {
+            const response = await fetch('http://127.0.0.1:8000/aeroporti/');
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+            return myJson
+        }
+        /* console.log(Aeroporti().then(res => {
+            console.log(res)
+        })) */
+
+        const Aeromobili = async () => {
+            const response = await fetch('http://127.0.0.1:8000/aeromobili/');
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+            return myJson
+        }
+        /* console.log(Aeromobili().then(res => {
+            console.log(res)
+        })) */
+
+        const Voli = async () => {
+            const response = await fetch('http://127.0.0.1:8000/voli/');
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+            return myJson
+        }
+        /* console.log(Voli().then(res => {
+            console.log(res)
+        })) */
+
+        const Dipendenti = async () => {
+            const response = await fetch('http://127.0.0.1:8000/dipendenti/');
+            const myJson = await response.json(); //extract JSON from the http response
+            // do something with myJson
+            return myJson
+        }
+        /* console.log(Dipendenti().then(res => {
+            console.log(res)
+        })) */
+        let tempo1 = new Date().getTime();
+        listaAeroporti_a = document.getElementById("andata");
+        listaAeroporti_ar = document.getElementById("andata_ritorno");
+
+        fetch(URL_VOLI)
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            /* for(var key in json.results){
+                var ch = json.results[key];
+                listaAeroporti_a.innerHTML += ch;
+            }
+
+            let tempo2 = new Date().getTime();
+            let totale = tempo2 - tempo1;
+            console.log("totale elaborazione: " + totale); */
+
+        } )
+        .catch(error => {
+            console.log("Si è verificato un errore: " + error);
+        })
+          
+        
+        function getUrlData(){
+            let currentUrl = window.location.href
+            let parametri = new URL(currentUrl).searchParams
+            return parametri
+        }
+        console.log(getUrlData().get("viaggiatori"))
+
+        function getBiglietti(){
+            var $crf_token = 'zVjm0jMb6u49aRVCguNhz0HWjOLJm0hq6gr7Nn3CLLBOU38xmIPT0wSrWaXv8GNl'
+            console.log($crf_token)
+            let chiamata = fetch ("http://127.0.0.1:8000/aeroporto/biglietti", {
+                method : "POST",
+                body : JSON.stringify({viaggiatori : getUrlData().get("viaggiatori"),
+                    andata : getUrlData().get("andata"),
+                    data1 : getUrlData().get("data_andata").trim(),
+                    data2 : getUrlData().get("data_ritorno").trim(),
+                    aeroporto1 : getUrlData().get("aeroporto_di_partenza"),
+                    aeroporto2 : getUrlData().get("aeroporto_di_arrivo"),}),
+
+                headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": $crf_token
+                        },
+            }).then(res => res.json())
+            .then(json =>{
+                for (let i = 0; i < json.length; i++) {
+                    console.log(json[i])
+                    let div = document.createElement("div");
+                    let ticket ='<h3 class="intro-text mt-1 ml-1 tc">Disponibilità voli da <br>'+ json[i].aeroporto_partenza +' --- '+ json[i].aeroporto_arrivo +'<br> dal giorno '+ json[i].data_partenza +' al giorno '+ json[i].data_arrivo +'</h3>\
+                            <div class="row d-flex container_ticket">\
+                            <div class="aeroporto_partenza">\
+                                <div class="background">\
+                                    <span class="input-group-text normal-text tw" id="data">'+ json[i].aeroporto_partenza +' </span>\
+                                    <input class="form-control" type="text" name="data" id="data" disabled placeholder='+ json[i].orario_partenza +'>\
+                                </div>\
+                            </div>\
+                            <div class="aeroporto_arrivo">\
+                                <div class="background">\
+                                    <span class="input-group-text normal-text tw" id="data">'+ json[i].aeroporto_arrivo +' </span>\
+                                    <input class="form-control" type="text" name="data" id="data" disabled placeholder='+ json[i].orario_arrivo +'>\
+                                </div>\
+                            </div>\
+                            <a class="button" type="button" class="btn btn-info button" onclick="Acquista('+ json[i].id +')">Acquista</a>\
+                            </div>'
+
+                            let b_container = document.getElementById("biglietti")
+                            b_container.innerHTML+=ticket
+                }
+                           
+            })
+            
+        }
+        console.log(getBiglietti())
+
+        function Acquista(id) {
+            console.log(id)
+            var $crf_token = 'xvb8WOcLrjlRuSFouSWUXGcFuH6laIIYRuljFX69USnD83cmf36IpsPrF0z48IYE'
+            console.log($crf_token)
+            let chiamata = fetch ("http://127.0.0.1:8000/aeroporto/biglietti/acquista", {
+                method : "POST",
+                body : JSON.stringify({id_volo : id, viaggiatori : getUrlData().get('viaggiatori') }),
+                headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": $crf_token
+                        },
+                
+            }).then(res => res.json())
+            .then(json =>{
+                console.log(json)
+                location.href = 'prenotazioni?id='+id+'&viaggiatori='+ POSTI_DA_PRENOTARE
+            })
+        }
+    </script>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">
+            <img src="{% static 'logo3.jpg' %}" alt="">
+        </div>
+        <ul class="menu">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'prenota' %}">Prenota</a></li>
+            <li><a href="{% url 'mie_prenotazioni' %}">Le mie prenotazioni</a></li>
+            <li><a href="{% url 'registrati' %}">Registrati</a></li>
+            <li><a href="">Aiuto</a></li>
+        </ul>
+        <div class="cta">
+            <a href="{% url 'contattaci' %}" class="button">Contatti</a>
+        </div> 
+        
+    </div>
+
+    <div class="hero hero--small">
+        <div class="hero__content">
+            <h1 class="big-text">Prenota il tuo viaggio</h1>
+        </div>
+    </div>
+
+        <div id="biglietti"></div>
+
+
+
+<footer class="footer mt-3">
+
+    <div class="grid">
+        <div class="col">
+            <h4 class="normal-text tw">Contatti telefonici</h4>
+            <p>+39 331 565 90 64</p>
+        </div>
+        <div class="col">
+            <h4 class="normal-text tw">Indirizzo E-mail</h4>
+            <p>stefanobls7@gmail.com</p>
+        </div>
+        <div class="col">
+            <h4 class="normal-text tw">Sede legale ed operativa</h4>
+            <p>Pescara (PE) - Via Tirino,99 - 65129 </p>
+        </div>
+        <div class="col">
+            <h4 class="normal-text tw">Prossimi eventi</h4>
+            <p>. . .</p>
+        </div>
+    </div>
+
+</footer>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/3.0.0/flickity.pkgd.min.js" integrity="sha512-achKCfKcYJg0u0J7UDJZbtrffUwtTLQMFSn28bDJ1Xl9DWkl/6VDT3LMfVTo09V51hmnjrrOTbtg4rEgg0QArA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
+
+</body>
+</html>

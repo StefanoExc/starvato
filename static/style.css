@@ -1,0 +1,472 @@
+/* Base Style */
+:root {
+    --color-bg:#181d23;
+    --color-green:#d8fb9b;
+    --color-green-soft:#d6e8b7;
+    --color-red:#cd5b5b;
+    --color-text: rgb(194,195,195);
+    --color-white: rgb(245,245,245);
+    --margin-small:20px;
+    --margin-big:50px;
+    --fontsize-base:22px;
+    --fontsize-medium:1.2rem;
+    --fontsize-big: 1.45rem;
+}
+
+body{
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    background-color: var(--color-bg);
+    color: var(--color-white);
+    font-size: var(--fontsize-base);
+    font-family: 'Open Sans', sans-serif;
+    padding: 0 30px;    
+}
+
+.btn{
+    background: none;
+    color: inherit;
+    padding: 4px 12px;
+    border: 1px solid var(--color-white);
+    transition: all .4s ease-in;
+}
+
+.btn:hover{
+    color:var(--color-green);
+    border: 1px solid var(--color-green);
+}
+
+a{text-decoration: none;}
+
+h1, h2, h3, h4, h5, p{color: #000; padding-bottom: 30px;}
+
+p{line-height: 28px; color: rgb(161, 148, 148); font-weight: 300;}
+
+.big-text{font-size: 70px; font-weight: 900;}
+.med-text{font-size: 40px;}
+.normal-text{font-size: 20px;}
+.small-text{font-size: 14px;}
+
+.intro-text{text-transform: uppercase; font-size: 20px; font-weight: bold;}
+
+.button{
+    padding: 18px 28px;
+    background: #f1c933;
+    color: #073590;
+    display: inline-block;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.center{
+    display: flex;
+    padding: 18px 28px;
+    background: #f1c933;
+    color: #073590;
+    justify-content: center;
+    font-weight: bold;
+    align-items: center; 
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 200px;
+    margin-left: 660px;
+    border-radius: 4px;
+}
+
+.buttonp{
+    width: 50%;
+    text-align: center;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 25%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .big-text{font-size: 40px};
+}
+
+/* Header */
+
+.header{
+    width: 100%;
+    position: fixed;
+    z-index: 10 ;
+    top: 0;
+    left: 0;
+    padding: 30px;
+    display: flex;
+}
+
+.logo{z-index: 1;}
+
+.menu{
+    transition: all 1s cubic-bezier(0.215, 0.610, 0.355, 1);
+    width: 100%;
+    z-index: 0;
+}
+
+.menu li{ display: inline-block;}
+.menu li a{ color: #fff; padding: 15px; display: block;}
+
+.hamburger{display: none;}
+
+
+
+@media (max-width: 768px) {
+    .cta{display: none;}
+
+    .menu{position: absolute; top: 0; right: -100%; background: blue; height: 100vh; padding-top: 80px;}
+    .menu li{display: block;}
+    .menu li a{padding: 15px 30px;font-size: 20px;}
+
+    .menu--open{right: 0%;}
+
+    .hamburger{
+        display: block;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 40px;
+        right: 30px;
+    }
+
+    .hamburger{background: #fff; height: 3px;width: 100%; display: block; margin-bottom: 5px;}
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+/* Hero */
+
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex; width: 100%; align-items: center;
+    background: linear-gradient(0deg, rgba(0,0,0,0.2), rgba(0,0,0,0.9)),
+     url('aeroporto1.jpg') no-repeat center center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.hero:after{
+    content: ' ';
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 0; left: 0;
+    background: #000;
+    opacity: 0.5;
+}
+
+.hero__content{
+    width: 100%;
+    max-width: 1350px;
+    margin: 0 auto;
+    z-index: 1;
+    position: relative;
+}
+
+.hero__content h1,
+.hero__content p{color: #fff}
+
+.hero--small{height: 450px; text-align: center;}
+
+#get_in{
+    position: absolute;
+    bottom:0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: 0;
+}
+
+/* Poster */
+
+.poster{
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.poster__img{width: 65%; height: 100%;}
+.poster__img img{object-fit: cover; width: 100%; height: 100%;}
+.poster__content{width: 35%; padding: 50px;}
+
+@media (max-width: 768px) {
+    .poster{flex-wrap: wrap;height: auto;}
+    .poster__img img,
+    .poster__content{width: 100%;}
+
+
+}
+
+/* BG Cover */
+
+.bg-cover{
+    display: flex;
+    padding: 100px 0;
+    background: linear-gradient(0deg, rgba(0,0,0,.7), rgba(0,0,0,0.7)),
+     url('sunset.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.bg-cover__text{width: 50%; padding: 30px;}
+.bg-cover__title{width: 50%; padding: 50px;display: flex; align-items: center;}
+
+@media (max-width: 768px) {
+    .bg-cover{flex-wrap: wrap; height: auto;}
+    .bg-cover__text,
+    .bg-cover__title{width: 100%;}
+
+}
+
+/* Grid */
+
+.grid{display: flex; max-width: 1350px; padding: 0 30px; margin: 0 auto;}
+.grid .col{width: 100%;}
+
+@media (max-width: 768px) {
+    .grid{flex-wrap: wrap;}
+}
+
+/* Carousel */
+
+.main-carousel{padding: 40px 0;}
+
+.carousel-cell{
+    height: 350px;
+    width: 350px;  
+    margin-right: 40px;
+}
+
+.carousel-cell__content{
+    width: 100%;
+    height: 100%;
+
+    border-radius: 100%;
+    line-height: 350px;
+    text-align: center;
+}
+
+
+/* Panel Blue */
+
+.panel-blue{background: #0aa10575; padding: 100px 30px;}
+.panel-blue__text{display: flex; align-items: center;}
+.dot{height: 250px;
+    width: 275px;
+
+    border-radius: 100%;
+    line-height: 250px;
+    text-align: center;
+    display: inline-block;
+    margin-right: 40px;
+    margin-bottom: 40px;
+}
+
+/* Footer */
+
+.footer{
+    background: #010e30;
+    padding: 150px 0;
+
+}
+
+/* Content */
+
+.content{max-width: 900px; margin: 40px auto}
+
+/* Table */
+
+.table{
+    width: 80%;
+    height: 250px;
+    background-color: rgb(36, 31, 80);
+    margin-top: 40px;
+    padding: 100px 50px;
+    text-align: center;
+    line-height: 75px;
+}
+
+.w-100{
+    width: 100%;
+
+}
+
+.d-flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Select */
+
+.selectp{
+    display: inline-block;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 35px;
+    margin-top: 20px;
+    margin-left: 13%;
+    background-color: rgb(36, 31, 80);
+}
+
+/* Request information*/
+.request{
+    padding: 50px 25px;
+    display:flex;
+    text-align:center;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(11, 85, 114);
+    margin-top: 7%;
+    margin-left: 30%;
+    margin-bottom: 7%;
+    width: 40%;
+    height: 35px;
+}
+
+/* Check radios */
+
+.radios{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 25px;
+    background-color: rgb(11, 85, 114);
+    width: 50%;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 25%;
+
+}
+
+/* Ticket */
+
+.aeroporto_partenza{
+    display: inline-block;
+    justify-content: center;
+    text-align: center;
+    align-items: center;    
+    width: 70%;
+    height: 60%;
+    background: url('../static/decollo.jpg');
+    background-size: cover;
+    background-position: center;
+    margin-top: 20px;
+    margin: 0 auto;
+    line-height: 20px;
+}
+
+.aeroporto_arrivo{
+    display: inline-block;
+    justify-content: center;
+    text-align: center;
+    align-items: center;    
+    width: 70%;
+    height: 70%;
+    background: url('../static/atterraggio.jpg');
+    background-size: cover;
+    background-position: center;
+    margin-top: 20px;
+    margin: 0 auto;
+    line-height: 20px;
+}
+
+.container_ticket{
+    flex-direction: column;
+}
+
+.background{
+    background-color: rgba(0,0,0,.7);
+    padding: 65px 25px;
+}
+
+.background_check{
+    padding: 20px;
+    background: url('../static/sunset.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.check_btn{
+    display:flex;
+    margin: 0 auto;
+    height: auto;
+    padding: 50px;
+    justify-content: center;
+}
+
+.check_btn img {width: 150px !important;}
+
+.selectedButton{
+    background-color: rgb(78, 118, 149);
+}
+
+.lista_prenotazioni{
+    background-color: #10265f;
+    padding: 20px;
+    text-align: center;
+    justify-content: center;
+    font-weight: bold;
+    color: rgb(202, 218, 32);
+    line-height: 50px;
+}
+
+.titolo_lista {
+    background-color: #f1c933;
+    padding: 20px;
+    font-family: 'Permanent Marker';
+}
+
+.line_height{
+    line-height: 20px;
+    margin-top: 30px;
+}
+
+
+
+
+
+
+
+
+
+/* Helpers */
+
+.ml-1{margin-left: 50px;}
+.mt-1{margin-top: 50px;}
+.mt-2{margin-top: 100px;}
+.mt-3{margin-top: 150px;}
+.tw{color: #fff;}
+.tc{text-align: center;}
+.p-separator{margin-top: 2%;
+    margin-bottom: 6%;
+    line-height: 20px;
+}
+.w-100{width: 100%;}

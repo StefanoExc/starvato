@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block head_title %}Il tuo posto-Starvato Airlines{% endblock head_title%}</title>
+    {% load static %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flickity/3.0.0/flickity.min.css" integrity="sha512-fJcFDOQo2+/Ke365m0NMCZt5uGYEWSxth3wg2i0dXu7A1jQfz9T4hdzz6nkzwmJdOdkcS8jmy2lWGaRXl+nFMQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+        const POSTI_DA_PRENOTARE = getUrlData().get('viaggiatori')
+
+        function getUrlData(){
+            let currentUrl = window.location.href
+            let parametri = new URL(currentUrl).searchParams
+            return parametri
+        }
+
+        function GetVolo(id) {
+            console.log(id)
+            var $crf_token = 'xvb8WOcLrjlRuSFouSWUXGcFuH6laIIYRuljFX69USnD83cmf36IpsPrF0z48IYE'
+            console.log($crf_token)
+            let chiamata = fetch ("http://127.0.0.1:8000/aeroporto/volo/"+ getUrlData().get("id"), {
+                method : "GET",
+                headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": $crf_token
+                        },
+                
+            }).then(res => res.json())
+            .then(json =>{
+                console.log(json)
+            })
+        } 
+
+        function getPosti() {
+            var $crf_token = 'zVjm0jMb6u49aRVCguNhz0HWjOLJm0hq6gr7Nn3CLLBOU38xmIPT0wSrWaXv8GNl'
+            console.log($crf_token)
+            let chiamata = fetch ("http://127.0.0.1:8000/aeroporto/volo", {
+                method : "POST",
+                body : JSON.stringify({volo_corrispondente : getUrlData().get('id')}),
+                headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": $crf_token
+                        },
+                
+            }).then(res => res.json())
+            .then(json =>{
+                json.forEach(element => {
+                    document.getElementById(element.posto_selezionato).classList.add('selectedButton')
+                });
+            })
+        }
+        getPosti()
+    </script>
+</head>
+<body>
+    
+
+    <div class="header">
+        <div class="logo">
+            <img src="{% static 'logo3.jpg' %}" alt="">
+        </div>
+        <ul class="menu">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'prenota' %}">Prenota</a></li>
+            <li><a href="{% url 'mie_prenotazioni' %}">Le mie prenotazioni</a></li>
+            <li><a href="{% url 'registrati' %}">Registrati</a></li>
+            <li><a href="">Aiuto</a></li>
+        </ul>
+        <div class="cta">
+            <a href="{% url 'contattaci' %}" class="button">Contatti</a>
+        </div>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div> 
+        
+    </div>
+
+    <div class="hero hero--small">
+        <div class="hero__content">
+            <h1 class="big-text">Prenota il tuo posto</h1>
+        </div>
+    </div>
+
+    <div class="modal fade" id="conferma" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Conferma posto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="messaggio_modal"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="chiudi_prenotazione" data-bs-dismiss="modal">Chiudi</button>
+                <button type="button" class="btn btn-success" id="prenotaPosto" onclick="savePosto()" data-posto="0">Prenota</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="intro-text mt-1 ml-1 tc">Selezione del posto</h3>
+    <div class="w-100 d-flex">
+        <table class="table tw">
+            <thead>
+            <tr class="normal-text">
+                <th scope="col">Fila</th>
+                <th scope="col">A</th>
+                <th scope="col">B</th>
+                <th scope="col">C</th>
+                <th scope="col">D</th>
+                <th scope="col">E</th>
+                <th scope="col">F</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+                <script>
+                    
+                    const postoArray = ["A","B","C","D","E","F"];
+                    const selectedPosti = []
+                    let selectedPosto = ""
+                    let counter = 0
+                    for (let i = 1; i <= 10; i++) { //genera le tr
+                        let tr = document.createElement("tr");
+                        tr.setAttribute("id","tr-" + i);
+                        let tdn = document.createElement("td");
+                        tdn.innerHTML= i;
+                        tr.append(tdn);
+                        for (let t = 0; t < 6; t++) { //genera 6 td per ogni tr
+                            let td = document.createElement("td");
+                            td.setAttribute("id", "td-" + i + "-" + t);
+                            let posto =  i;
+                            let fila = postoArray[t];
+                            let button = $('<button type="button" id="'+i+'_'+postoArray[t]+'" class="btn btn-info button postoLibero" data-bs-toggle="modal" data-bs-target="#conferma"  fila="'+ i +'" onclick="selezionaPosto('+i+','+t+')">\
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="34" viewBox="0 0 24 24" stroke-width="1.3" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">\
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>\
+                                    <circle cx="12" cy="7" r="4" />\
+                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />\
+                                </svg></button>')          
+                            button.appendTo(td);
+                            tr.append(td);
+                        }
+                        $("#tableBody").append(tr);
+                    }
+                    
+
+
+                    function selezionaPosto(i,t) {
+                        let modal = document.getElementById("messaggio_modal")
+                        let conferma_p = document.getElementById('confirm')
+                        if (counter < getUrlData().get('viaggiatori')){
+
+                            var confermaModal = document.getElementById('conferma')
+                            confermaModal.addEventListener('show.bs.modal', function (event) {
+                                // Button that triggered the modal
+                                var button = event.relatedTarget
+                                // Extract info from data-bs-* attributes
+                                var posto = button.getAttribute('posto')
+                                var fila = button.getAttribute('fila')
+                                // If necessary, you could initiate an AJAX request here
+                                // and then do the updating in a callback.
+                                //
+                                // Update the modal's content.
+                                var buttonPrenota = confermaModal.querySelector('#prenotaPosto')
+                                buttonPrenota.dataset.posto = fila + posto;
+                            }) 
+
+                            counter++
+                            if (counter == getUrlData().get('viaggiatori')) document.querySelector('#confirm').disabled = false
+                            selectedPosto = i + '_' + postoArray[t]
+
+                            modal.innerHTML = "Vuoi prenotare il posto " + i + '_' + postoArray[t] + " ?";
+
+                            
+                        } else {
+                            document.querySelector('#prenotaPosto').disabled = true
+                            modal.innerHTML = "Hai già prenotato " + getUrlData().get('viaggiatori') + " posto/i"
+                            
+                        }
+                        
+                        
+
+                    } 
+
+                    function savePosto(){
+                        selectedPosti.push(selectedPosto)
+                        let casella = document.getElementById(selectedPosto)
+                            
+
+                        console.log(casella)
+                        casella.classList.add("selectedButton")
+
+                        $('#conferma').modal('hide');
+                    }
+
+                    function savePrenotazioni() {
+                        var $crf_token = 'zVjm0jMb6u49aRVCguNhz0HWjOLJm0hq6gr7Nn3CLLBOU38xmIPT0wSrWaXv8GNl'
+                        let chiamata = fetch ("http://127.0.0.1:8000/aeroporto/store", {
+                            method : "POST",
+                            body : JSON.stringify({posti : selectedPosti, id_volo : getUrlData().get('id'),id_user : 1}),
+                            headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    "X-CSRFToken": $crf_token
+                                    },
+                        }).then(res => res.json())
+                        .then(res => {
+                            console.log(res)
+                            location.href = 'conferma'
+                        })
+                        
+                    }
+                    
+                    
+
+                </script>
+            </tbody>
+        </table>
+    </div>
+    <button class="button buttonp bold" onclick="savePrenotazioni()" type="button" id="confirm" class="btn btn-info button" disabled>Prenota</button>
+
+
+<footer class="footer">
+
+    <div class="grid">
+        <div class="col">
+            <h4 class="normal-text tw">Contatti telefonici</h4>
+            <p>+39 331 565 90 64</p>
+        </div>
+        <div class="col">
+            <h4 class="normal-text tw">Indirizzo E-mail</h4>
+            <p>stefanobls7@gmail.com</p>
+        </div>
+        <div class="col">
+            <h4 class="normal-text tw">Sede legale ed operativa</h4>
+            <p>Pescara (PE) - Via Tirino,99 - 65129 </p>
+        </div>
+        <div class="col">
+            <h4 class="normal-text tw">Prossimi eventi</h4>
+            <p>. . .</p>
+        </div>
+    </div>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flickity/3.0.0/flickity.pkgd.min.js" integrity="sha512-achKCfKcYJg0u0J7UDJZbtrffUwtTLQMFSn28bDJ1Xl9DWkl/6VDT3LMfVTo09V51hmnjrrOTbtg4rEgg0QArA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
+
+<script>
+    $( document ).ready(function() {
+        $( ".hamburger").on('click', function(){
+            $( ".menu" ).toggleClass("menu--open");
+        })
+
+
+    })
+
+
+
+</script>
+</body>
+</html>
